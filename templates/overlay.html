@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PlayQuartz - Chat</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+        <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    </head>
+    <body>
+
+        <div class="main_container" style="height: 100%; display: flex; flex-direction: column;">
+        </div>
+
+        <script src="{{ url_for('static', filename='js/overlay.js') }}"></script>
+    </body>
+    <style>
+        body, html{
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+
+        }
+        
+    </style>
+</html>
