@@ -52,14 +52,14 @@ Ensure you have Node.js and npm (Node Package Manager) installed on your system.
     In the root directory of your project, you will find a `config.json` file with the following structure:
     ```json
     {
-        "twitch_auth": "your_twitch_username",
-        "twitch_username": "your_twitch_auth_key"
+        "twitch_auth": "oauth:your_twitch_auth_key",
+        "twitch_username": "your_twitch_username"
     }
     ```
 
 2. **Fill in your Twitch details**:
-    - **twitch_auth**: Replace `"your_twitch_auth_key"` with your Twitch authentication key.
-    - **twitch_username**: Replace `"your_twitch_username"` with your actual Twitch username.
+    - **twitch_auth**: Replace `your_twitch_auth_key` with your Twitch authentication key.
+    - **twitch_username**: Replace `your_twitch_username` with your actual Twitch username.
 
     You can obtain your Twitch authentication key from the Twitch Developer Console. Make sure to securely store this key and not expose it publicly.
 

@@ -1,4 +1,4 @@
 {
-    "twitch_auth": "your_twitch_username",
-    "twitch_username": "your_twitch_auth_key"
+    "twitch_auth": "oauth:your_twitch_auth_key",
+    "twitch_username": "your_twitch_username"
 }
