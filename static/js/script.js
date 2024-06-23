@@ -50,7 +50,6 @@ async function push_message(user_message){
         message_list.push(user_message)
         wss.send("add_message"+JSON.stringify(user_message))
         display = await generate_message(user_message, false)
-        document.querySelector(".container.display").append(display)
     }
 }
 

@@ -1,21 +1,3 @@
-async function post_request(url, json_data) {
-    try {
-        const response = await fetch(config.request_server+url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(json_data)
-        });
-        return await response.json();
-    } catch (error) {
-        console.error("Error in post_request:", error);
-        throw error;
-    }
-}
-
-function wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 const feed_container = document.querySelector(".main_container")
 
 function add_message(message_data){
@@ -44,7 +26,7 @@ function update_feed(json_data){
 }
 
 
-const wss = new WebSocket('ws://localhost:8080/test');
+const wss = new WebSocket('ws://localhost:8080/'+window.location.search.split("=")[1]);
 
 wss.onopen = () => {
     console.log('Connected to WebSocket server');
