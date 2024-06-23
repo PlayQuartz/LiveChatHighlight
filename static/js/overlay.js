@@ -3,17 +3,15 @@ const feed_container = document.querySelector(".main_container")
 function add_message(message_data){
 
     let message_container = document.createElement("div")
-    let username = document.createElement("div")
     let message = document.createElement("div")
 
     message_container.classList.add("message_container")
-    username.classList.add("username")
     message.classList.add("message")
+    message.setAttribute('contenteditable', 'false');
+    
+    message.innerHTML = `<b style='color:${message_data.color}'>${message_data["display-name"]}: </b>"${message_data.message}`
 
-    username.innerHTML = message_data["display-name"]
-    message.innerHTML = message_data.message
-
-    message_container.append(username, message)
+    message_container.append(message)
 
     feed_container.append(message_container)
 }
