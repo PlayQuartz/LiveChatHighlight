@@ -22,7 +22,7 @@ function badge(color="purple"){
 
 const nickname = 'PlayQuartz';
 const token = 'oauth:hflg6jsthewec1shlv4ybnc5rfxu58';  // Generate this from Twitch
-const channel = '#aussieantics';
+const channel = '#kaicenat';
 
 const ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
 
@@ -30,34 +30,27 @@ var message_list = []
 
 function create_display(user_message){
 
-    let message = user_message.message
-    let username = user_message["display-name"]
+    let message_container = document.createElement("div")
+    let message = document.createElement("div")
+    let message_body = document.createElement("b")
 
-    div = document.createElement("div")
-    div.classList.add("message_container")
+    message_container.classList.add("message_container")
+    message.classList.add("message")
 
-    div.addEventListener("click", function(event){
-        if (event.target.classList.contains("message")){
-            event.target.parendNode.remove()
-        }
-        else{
-            event.target.remove()
-        }
+    message.setAttribute('contenteditable', 'false');
+    message_body.innerText = user_message["display-name"]+": "
+    message_body.style.color = user_message.color
+
+    message.append(message_body)
+    message.append(user_message.message)
+    message_container.append(message)
+
+    message_container.addEventListener("click", function(){
+        message_container.remove()
         handle_declick(user_message)
     })
 
-    div2 = document.createElement("div")
-    div2.classList.add("message")
-    div2.setAttribute('contenteditable', 'false');
-
-    usertext = document.createElement("b")
-    usertext.innerText = username+": "
-
-    div2.append(usertext)
-    div2.append(message)
-    div.append(div2)
-
-    return div
+    return message_container
 }
 
 async function handle_declick(user_message){
@@ -125,7 +118,7 @@ wss.onopen = () => {
 };
 
 wss.onmessage = (event) => {
-    console.log('Message from server:', event.data);
+    console.log(event.data);
 };
 
 wss.onclose = () => {

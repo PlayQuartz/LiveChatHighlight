@@ -37,7 +37,7 @@ web_socket_server.on('connection', (ws, request) => {
     })
 
 
-    ws.send(rooms[room].data)
+    ws.send(JSON.stringify(rooms[room].data))
 
     ws.on('message', (message) => {
 
@@ -48,12 +48,9 @@ web_socket_server.on('connection', (ws, request) => {
 
             for (unit_message in rooms[room].data){
                 if(rooms[room].data[unit_message].id == message_id){
-                    console.log("Duplicate")
                     return -1
                 }
             }
-
-            console.log("Adding")
             rooms[room].data.push(message_json)
         }
         else if(message.includes("remove_message")){
@@ -68,7 +65,11 @@ web_socket_server.on('connection', (ws, request) => {
             })
 
         }
-        ws.send(`Server received: ${JSON.stringify(rooms[room].data)}`);
+
+        rooms[room].users.forEach(user =>
+            user.send(JSON.stringify(rooms[room].data))
+        )
+
     });
 
     ws.on('close', () => {
