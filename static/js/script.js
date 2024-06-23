@@ -22,16 +22,28 @@ function badge(color="purple"){
 
 const nickname = 'PlayQuartz';
 const token = 'oauth:hflg6jsthewec1shlv4ybnc5rfxu58';  // Generate this from Twitch
-const channel = '#loeya';
+const channel = '#aussieantics';
 
 const ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
 
-function create_display(message, username){
+var message_list = []
+
+function create_display(user_message){
+
+    let message = user_message.message
+    let username = user_message["display-name"]
+
     div = document.createElement("div")
     div.classList.add("message_container")
 
     div.addEventListener("click", function(event){
-        console.log(event.target.remove())
+        if (event.target.classList.contains("message")){
+            event.target.parendNode.remove()
+        }
+        else{
+            event.target.remove()
+        }
+        handle_declick(user_message)
     })
 
     div2 = document.createElement("div")
@@ -48,15 +60,43 @@ function create_display(message, username){
     return div
 }
 
-function create_message(message, username, color, hasBadge=false){
+async function handle_declick(user_message){
+    message_list.forEach((unit_message, index) =>{
+        if(unit_message.id == user_message.id){
+            message_list.splice(index, 1)
+        }
+    })
+    wss.send("remove_message"+JSON.stringify(user_message))
+}
+
+async function handle_click(user_message){
+    console.log(message_list)
+    var duplicate = false
+    message_list.forEach(unit_message =>{
+        if(unit_message.id == user_message.id){
+            duplicate = true
+        }
+    })
+    if(!duplicate){
+        message_list.push(user_message)
+        wss.send("add_message"+JSON.stringify(user_message))
+        display = await create_display(user_message)
+        document.querySelector(".container.display").append(display)
+    }
+}
+
+function create_message(user_message){
+
+    let message = user_message.message
+    let username = user_message["display-name"] 
+    let color =  user_message.color
+    let hasBadge = user_message.badges.includes("subscriber")
+
     div = document.createElement("div")
     div.classList.add("message_container")
 
     div.addEventListener("click", function(){
-        socket.send("message " + username + " " + message)
-        div_container = create_display(message, username)
-        const messageContainer = document.querySelector('.display');
-        messageContainer.append(div_container);
+        handle_click(user_message)
     })
 
     if(hasBadge){
@@ -78,14 +118,19 @@ function create_message(message, username, color, hasBadge=false){
     return div
 }
 
-var socket = io.connect("http://127.0.0.1:5000");
-socket.on('connect', function() {
-    socket.send('message Hello world');
-});
+const wss = new WebSocket('ws://localhost:8080/test');
 
-socket.on('message', function(msg) {
-    console.log(msg)
-});
+wss.onopen = () => {
+    console.log('Connected to WebSocket server');
+};
+
+wss.onmessage = (event) => {
+    console.log('Message from server:', event.data);
+};
+
+wss.onclose = () => {
+    console.log('Disconnected from WebSocket server');
+};
 
 ws.onopen = function(event) {
     ws.send(`PASS ${token}`);
@@ -116,17 +161,13 @@ ws.onmessage = function(event) {
 
         user_message["message"] = double_point_split[2]
 
-        div = create_message(user_message.message, user_message["display-name"], user_message.color, (user_message.badges.includes("subscriber")))
+        div = create_message(user_message)
         messageContainer.append(div);
-
-        console.log(second_container.scrollTop, second_container.scrollHeight)
 
         const isNearBottom = second_container.scrollHeight - second_container.scrollTop <= second_container.clientHeight + 50;
         if (isNearBottom) {
             second_container.scrollTop = second_container.scrollHeight;
         }
-
-        console.log(user_message)
     }
 
 
