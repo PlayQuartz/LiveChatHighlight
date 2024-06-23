@@ -4,6 +4,10 @@ const WebSocket = require("ws")
 
 const server = express()
 
+server.get("/config", (request, response) =>{
+    return response.sendFile(path.join(__dirname, "config.json"))
+})
+
 server.get("/:document_name", (request, response) =>{
     document_name = request.params.document_name
     return response.sendFile(path.join(__dirname, document_name));
@@ -13,6 +17,7 @@ server.get("/js/:document_name", (request, response) =>{
     document_name = request.params.document_name
     return response.sendFile(path.join(__dirname, "/static/js/"+document_name))
 })
+
 
 // Web Socket Server //
 const web_socket_server = new WebSocket.Server({port: 8080})
